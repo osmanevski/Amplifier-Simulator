@@ -1,0 +1,300 @@
+{
+  "summary": {
+    "revision": "Rev A",
+    "profile": "DENEYSEL-01",
+    "hash": "4bdeedb1",
+    "node": "v22.23.2",
+    "date": "2026-10-01T13:29:26.747Z",
+    "pass": 24,
+    "fail": 0,
+    "notrun": 2
+  },
+  "results": [
+    {
+      "id": "MK-01",
+      "group": "Model",
+      "title": "5Y3 modeli, JJ 5Y3S tipik noktasına karşı",
+      "req": "IR §6.3, T1",
+      "ms": 49,
+      "status": "pass",
+      "measured": "360,0 V",
+      "expected": "360 V ± %1 (350 VAC, 20 µF, 50 Ω, 125 mA)",
+      "note": "Veri sayfası noktası: JJ 5Y3S. Eldeki 5Y3GT'nin kimliği değildir."
+    },
+    {
+      "id": "MK-02",
+      "group": "Model",
+      "title": "6V6 modeli, JJ 6V6S tipik noktasına karşı",
+      "req": "IR §7, T2",
+      "ms": 0,
+      "status": "pass",
+      "measured": "Ia 46,1 mA · Ig2 5,00 mA",
+      "expected": "45 mA ± %5 · 5 mA ± %5 (250 V / 250 V / −12,5 V)",
+      "note": "Tek nokta uyumu; eğrilerin tamamı ve eldeki tüp doğrulanmadı."
+    },
+    {
+      "id": "EL-01",
+      "group": "Elektriksel",
+      "title": "Filtre zinciri ve düğüm doğrulaması",
+      "req": "IR §6.1",
+      "ms": 3,
+      "status": "pass",
+      "measured": "B+1→R10→B+2→R11→B+3; C3/C4/C5 ve yükler doğru düğümde",
+      "expected": "B+1: OT + 5Y3 katodu · B+2: screen · B+3: R4, R6",
+      "note": "Seri zincir yorumu kullanıcı onayı bekliyor (K-01)."
+    },
+    {
+      "id": "EL-02",
+      "group": "Elektriksel",
+      "title": "High / Low, ideal kaynak (pasif ağ)",
+      "req": "P1 s.5",
+      "ms": 1,
+      "status": "pass",
+      "measured": "HIGH: Zin 1000,0 kΩ, kazanç -0,00 dB · LOW: Zin 136,0 kΩ, kazanç -6,02 dB · High grid stopper 34,0 kΩ",
+      "expected": "High: 1 MΩ, 0 dB, 68k‖68k = 34 kΩ · Low: 136 kΩ, −6,02 dB (≤ %0,1)",
+      "note": ""
+    },
+    {
+      "id": "EL-03",
+      "group": "Elektriksel",
+      "title": "Sonlu gitar / kablo empedansı",
+      "req": "IR §8.1",
+      "ms": 656,
+      "status": "pass",
+      "measured": "Low − High: 100 Hz -6,40 dB · 1000 Hz -6,56 dB · 5000 Hz -9,67 dB",
+      "expected": "Sabit −6,02 dB DEĞİL; frekansa ve yüklemeye bağlı",
+      "note": "Manyetik modeli temsilîdir (7 kΩ, 3 H, 470 pF); sayılar belirli bir gitara ait değildir."
+    },
+    {
+      "id": "EL-04",
+      "group": "Elektriksel",
+      "title": "Volume / TMB uç konumları",
+      "req": "IR §8",
+      "ms": 17,
+      "status": "pass",
+      "measured": "Pot toplam direnci sapması ≤ 1,0 Ω · 81 kombinasyonun 81 tanesi sonlu",
+      "expected": "Sapma ≤ 1 Ω (uç direnci) · 81 / 81 sonlu",
+      "note": "Uç konumda 1 Ω uç direnci kabul edilir (sayısal alt sınır)."
+    },
+    {
+      "id": "EL-05",
+      "group": "Elektriksel",
+      "title": "RAW / EQ: ağın çıkarılma biçimi ve yükü",
+      "req": "IR §8.2",
+      "ms": 2,
+      "status": "pass",
+      "measured": "EQ − RAW: -18,3 … -11,2 dB (yayılım 7,0 dB) · V1A çıkışı EQ'da %43,0 farklı · \"tap\" yöntemi %44,7 farklı",
+      "expected": "Kayıp frekansa bağlı (tek kazanç çarpanı değil); V1A yükü değişiyor; RAW'da TSI ayrık, VT ≡ CO1",
+      "note": ""
+    },
+    {
+      "id": "EL-06",
+      "group": "Elektriksel",
+      "title": "Bright / Dark, dört konum",
+      "req": "IR §8",
+      "ms": 2,
+      "status": "pass",
+      "measured": "5 kHz (volume %30): Bright 5,25 dB · Dark -16,75 dB · ikisi -10,01 dB · tam volume'da Bright farkı 0,000 dB",
+      "expected": "Bright > +1 dB, Dark < −1 dB, 200 Hz'de ≈ 0; tam volume'da Bright farkı < 0,05 dB; ikisi birlikte ≠ basit toplam",
+      "note": "Gerçek ağ etkileşimi: Bright C11 pot üst yarısını, Dark C12 kaynak empedansını görür."
+    },
+    {
+      "id": "EL-07",
+      "group": "Elektriksel",
+      "title": "6V6 DC çalışma noktası",
+      "req": "IR §7",
+      "ms": 0,
+      "status": "pass",
+      "measured": "Ik = Vk/Rk = 40,67 mA · Ia + Ig2 = 37,40 + 3,27 mA · Va 348,8 V · Pa 12,33 W · Pg2 0,95 W · OT DCR düşümü 11,2 V",
+      "expected": "Ik = Ia + Ig2 (≤ %0,5) · B+1 − Va = Ia × R_primer (≤ %2) · Pa = (Va − Vk) × Ia",
+      "note": "Bir şebeke periyodu ortalamaları. Deneysel profil; eldeki tüp ve trafo ile ölçülmedi."
+    },
+    {
+      "id": "EL-08",
+      "group": "Elektriksel",
+      "title": "320 / 325 VAC profilleri",
+      "req": "IR §6.2",
+      "ms": 621,
+      "status": "pass",
+      "measured": "ΔB+1 5,74 V · ΔB+2 5,04 V · ΔB+3 4,37 V · ΔIa 0,69 mA",
+      "expected": "Bütün gerilim / akımlar yeniden çözülür; fark her düğümde aynı sabit değildir",
+      "note": ""
+    },
+    {
+      "id": "EL-09",
+      "group": "Elektriksel",
+      "title": "Soğuk açılış: kapasitör tepe gerilimleri ve 5Y3 akım darbesi",
+      "req": "IR §6.2–6.3",
+      "ms": 10591,
+      "status": "pass",
+      "measured": "Tepe: C3 451 V / 500 · C4 451 V / 450 · C5 450 V / 450 · 5Y3 tepe 167 mA / plaka · 28 s sonunda B+1 360,0 V",
+      "expected": "Açılış tepeleri kararlı değerlerin (360 / 310 / 271 V) üstünde ve kayıtlı; sonunda kararlı değere oturur",
+      "note": "TASARIM BULGUSU: nominal gerilimin %90'ı aşılıyor → C3 %90, C4 %100, C5 %100 (K-10). Isınma zaman sabitleri temsilîdir; 5Y3 tepe akım sınırı için veri yok. İdeal yüksüz tepe 452,5 V (320 VAC)."
+    },
+    {
+      "id": "EL-10",
+      "group": "Elektriksel",
+      "title": "4 / 8 / 16 Ω doğru eşleşme",
+      "req": "IR §9",
+      "ms": 0,
+      "status": "pass",
+      "measured": "İdeal: 8002,0 / 8002,0 / 8001,5 Ω · kayıplı: 8935 / 8784 / 8684 Ω",
+      "expected": "İdeal modelde üç tapta 8000 Ω (≤ %0,1)",
+      "note": "Kayıplı farkı: primer DCR 300 Ω + sekonder bölüm dirençlerinin n² ile yansıması (deneysel OT verisi)."
+    },
+    {
+      "id": "EL-11",
+      "group": "Elektriksel",
+      "title": "Yüksüz / yanlış / çoklu yük",
+      "req": "IR §9.1",
+      "ms": 1348,
+      "status": "pass",
+      "measured": "Durumlar: YUKSUZ, YANLIS, COKLU, ESLESMIS · 4 Ω yük 16 Ω jakta → 2000 Ω · yüksüz plaka tepe 825 V (eşleşmiş 607 V) · tüp akımı sürüyor (27,6 mA)",
+      "expected": "Geçersiz / tehlikeli durum açıkça işaretli; yanlış jak 2000 Ω yansıtır; model hayalî koruma uygulamaz",
+      "note": "Yüksüz plaka gerilimi yalnız doğrusal trafo modelinin sonucudur. Ark, izolasyon delinmesi ve nüve doyumu: model değerlendiremiyor."
+    },
+    {
+      "id": "EL-12",
+      "group": "Elektriksel",
+      "title": "NFB doğru / ters polarite",
+      "req": "IR §9.2",
+      "ms": 7,
+      "status": "pass",
+      "measured": "T(1 kHz) = 1,05 ∠4° · kazanç: NFB'li 41,44 dB, açık çevrim 47,68 dB, R12 sökülü 47,4 dB, ters fazda 69,2 dB · A/(1+T) öngörüsü 41,44 dB · ters fazda Nyquist: KARARSIZ",
+      "expected": "Doğru fazda T > 0 ve kapalı çevrim kazancı = açık çevrim / (1+T) (≤ %2); ters fazda T < 0 ve kazanç artar; kaynak tapı 8 Ω kabinde de S4",
+      "note": "Açık çevrim, R12 katotta bırakılıp tap ucu topraklanarak ölçülür: R12'yi sökmek katot yükünü de değiştirdiği için 1/(1+T) ile karşılaştırılamaz. Kararlılık yalnız 20 Hz – 20 kHz ve modellenen fazlar (Lp, kaçak endüktans, kuplaj) için geçerlidir; sargı kapasitesi ve hoparlör empedansı modelde yok."
+    },
+    {
+      "id": "EL-13",
+      "group": "Elektriksel",
+      "title": "Küçük sinyal → aşırı sürüş",
+      "req": "IR §7.2",
+      "ms": 2907,
+      "status": "pass",
+      "measured": "2 mV: kazanç 118,1 (AC analizi 118,1), THD %0,21 · 0,5 V + tam volume: THD %58, tepe +9,6 / −5,4 V, H2 -7 dBc, 6V6 grid akımı tepe 0,07 mA",
+      "expected": "Küçük sinyalde zaman alanı kazancı = AC kazancı (≤ %2), THD < %1; aşırı sürüşte THD > %10, asimetrik kırpılma, çift harmonik, grid iletimi",
+      "note": "FFT: 96 kHz, N = 16384, Hann, yerleşme 120 ms, 10 harmonik. Aşırı sürüşte çıkış gücü ve ekran gücü yaklaşık değerdir (6V6 model kartı)."
+    },
+    {
+      "id": "EL-14",
+      "group": "Elektriksel",
+      "title": "Güç kapatma / bleeder varyantı",
+      "req": "IR §15",
+      "ms": 7717,
+      "status": "pass",
+      "measured": "Sıcak kapatma: 360 V → 40 ms sonra 287 V (tüpler üzerinden boşalıyor) · soğuk kapatma, bleeder yok: 446 V → 40 s sonra 444 V · 220 kΩ bleeder: 434 V → 40 s sonra 3,0 V (kaba RC öngörüsü 2,8 V)",
+      "expected": "Kapatınca B+ anında sıfıra inmez; tüpler iletimde değilken bleeder yoksa gerilim kalır (≥ %95); bleeder ile 40 s'de < %5",
+      "note": "İlk yazımda sıcak kapatmada da gerilimin kalacağı beklenmişti; bu fiziksel olarak yanlıştı (sıcak tüpler kapasitörleri ~0,5 s içinde boşaltır) ve test tehlikeli durumu, yani tüpler iletimde değilken kapatmayı sınayacak biçimde düzeltildi. Soğuma zaman sabitleri temsilîdir; kapasitör kaçağı modelde yok. Boşaldığı her durumda ölçülmelidir."
+    },
+    {
+      "id": "NU-01",
+      "group": "Sayısal",
+      "title": "Pasif analitik ağ",
+      "req": "IR §16",
+      "ms": 1,
+      "status": "pass",
+      "measured": "Low 0,50000 · vol 0.25 → 0,25000 · vol 0.5 → 0,50000 · vol 0.75 → 0,75000 · B+3 yüksüz 400,000 V · en büyük bağıl hata 5.0e-7",
+      "expected": "Bağıl hata ≤ %0,1",
+      "note": "Sıfıra yakın sonuç yok; mutlak tolerans gerekmedi. Kalan hata: 1 pS düğüm iletkenliği (GMIN)."
+    },
+    {
+      "id": "NU-02",
+      "group": "Sayısal",
+      "title": "TMB AC yanıtı, bağımsız el türetimine karşı",
+      "req": "IR §16",
+      "ms": 14,
+      "status": "pass",
+      "measured": "En büyük fark 1.30e-5 dB (366 nokta, 61 tanesi −80 dB altında olduğu için dışarıda)",
+      "expected": "20 Hz – 20 kHz, 6 pot düzeni, ≤ 0,25 dB",
+      "note": "Referans aynı topolojiyi varsayar (bağımsız kod, aynı devre). Topolojinin kendisi açık karardır (K-05). Tüpsüz, ideal kaynakla."
+    },
+    {
+      "id": "NU-03",
+      "group": "Sayısal",
+      "title": "DC çalışma noktası, bağımsız yük doğrusu çözümüne karşı",
+      "req": "IR §16",
+      "ms": 0,
+      "status": "pass",
+      "measured": "V1A plaka 183,75 V (referans 183,75) · V1A katot 1,3048 V (1,3048) · 6V6 katot 19,116 V (19,116) · en büyük fark %0,000",
+      "expected": "Düğüm gerilimlerinde ≤ %1",
+      "note": "Aynı tüp denklemi, bağımsız skaler ikiye bölme çözümü: çözücüyü doğrular, tüp modelinin fiziksel doğruluğunu DEĞİL."
+    },
+    {
+      "id": "NU-03b",
+      "group": "Sayısal",
+      "title": "ngspice referans karşılaştırması",
+      "req": "IR §11, T5",
+      "ms": 0,
+      "status": "notrun",
+      "measured": "—",
+      "expected": "Aynı netlist ve tüp modeliyle DC / AC / zaman alanı farkları",
+      "note": "ÇALIŞTIRILMADI: bu ortamda ngspice kurulu değil. Netlist dışa aktarımı hazır (Olay günlüğü → Dışa aktar → Netlist). İki modelin aynı sayıyı vermesi, aynı varsayımı paylaşıyorlarsa fiziksel doğrulama değildir."
+    },
+    {
+      "id": "NU-04",
+      "group": "Sayısal",
+      "title": "Adım yakınsaması",
+      "req": "IR §16",
+      "ms": 3377,
+      "status": "pass",
+      "measured": "96 → 192 kHz: RMS %0,002, tepe %0,001, THD 0,001 yüzde puan · besleme 100 → 50 µs: B+1 %0,0010, Ia %0,0011",
+      "expected": "Adım yarıya inince RMS / tepe ≤ %1, THD ≤ 0,1 yüzde puan; B+1 ≤ %0,1",
+      "note": "50 mV, 1 kHz, 4 Ω eşleşmiş yük. Hann penceresi, 85 ms pencere süresi sabit."
+    },
+    {
+      "id": "NU-05",
+      "group": "Sayısal",
+      "title": "Aynı deneyin tekrarı",
+      "req": "IR §16",
+      "ms": 313,
+      "status": "pass",
+      "measured": "İki çalıştırma bit düzeyinde aynı",
+      "expected": "Aynı sürüm ve girişte aynı sonuç",
+      "note": "Modelde rastgele sayı kullanılmaz; tohum gerekmez."
+    },
+    {
+      "id": "NU-06",
+      "group": "Sayısal",
+      "title": "Oynatma hızından bağımsızlık",
+      "req": "IR §16",
+      "ms": 495,
+      "status": "pass",
+      "measured": "Kare başına 1 / 37 / 333 / 6000 adım: 6000 adım sonunda durum vektörü ve kayıt bit düzeyinde aynı",
+      "expected": "Hız değişimi aynı simülasyon anında aynı ölçümleri verir",
+      "note": "Hız yalnızca birim gerçek zamanda atılan sabit 100 µs'lik adım sayısını değiştirir."
+    },
+    {
+      "id": "UI-01",
+      "group": "Veri / arayüz",
+      "title": "Veri tutarlılığı: şema, denetçi, netlist ve BOM",
+      "req": "IR §14, §16",
+      "ms": 28,
+      "status": "pass",
+      "measured": "32 anahtar / yöntem kombinasyonu; 47 bileşen; tek noktadan değişiklik dört görünümde",
+      "expected": "Şema, netlist ve BOM aynı referans / değerleri taşır; bütün anahtar kombinasyonları kurulur",
+      "note": ""
+    },
+    {
+      "id": "UI-02",
+      "group": "Veri / arayüz",
+      "title": "Kullanım: klavye, dar ekran, sıfırla / devam, içe aktarım, iptal",
+      "req": "IR §16",
+      "ms": 0,
+      "status": "notrun",
+      "measured": "—",
+      "expected": "Gerçek hedef tarayıcılarda elle test",
+      "note": "Otomatik takımda ÇALIŞTIRILMAZ. Elle yapılan tarayıcı kontrolü docs/DOGRULAMA.md içinde ayrıca kayıtlıdır; yalnız headless sonuçla yetinilmez."
+    },
+    {
+      "id": "UI-03",
+      "group": "Veri / arayüz",
+      "title": "Geçersiz veri reddi ve dürüst hata",
+      "req": "IR §14, §16",
+      "ms": 1,
+      "status": "pass",
+      "measured": "Birim çevrimi tutarlı; negatif / NaN / sonsuz / bilinmeyen / eksik model / açık değer / tekil devre reddedildi",
+      "expected": "Geçersiz veri reddedilir; NaN, eksik model ve yarım analiz yeşil başarıya dönüşmez",
+      "note": ""
+    }
+  ]
+}

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Doğrulama — 5F1 Modifiye</title>
+<link rel="stylesheet" href="assets/amp.css?v=20261001-h">
+<style>
+  body { background: var(--paper); }
+  .doc { max-width: 1100px; margin: 0 auto; padding: 18px 18px 40px; }
+  .doc-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+  .doc-top h1 { margin: 0; font-family: var(--font-display); font-stretch: 125%; font-weight: 800; font-size: 26px; line-height: 1.05; }
+  .doc-top h1 span { color: var(--a28); }
+  .page { background: var(--sheet); border: 1px solid var(--rule); padding: 24px 28px 28px; }
+  .page + .page { margin-top: 14px; }
+  .page h2 { margin: 0 0 4px; font-family: var(--font-display); font-stretch: 112%; font-weight: 800; font-size: 19px; }
+  .page .lead { color: var(--ink-2); margin: 0 0 14px; max-width: 82ch; }
+  .verdict-box { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1.5px solid var(--ink); }
+  .verdict-box > div { padding: 12px 14px; border-left: 1px solid var(--rule); }
+  .verdict-box > div:first-child { border-left: 0; }
+  .verdict-box .big { font-family: var(--font-data); font-weight: 700; font-size: 28px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .verdict-box .big.bad { color: var(--fault); } .verdict-box .big.ok { color: var(--cv); } .verdict-box .big.dim { color: var(--ink-3); }
+  .verdict-box p { margin: 4px 0 0; font-size: 13px; color: var(--ink-2); }
+  .chartbox { height: 300px; border: 1px solid var(--rule); background: #fff; position: relative; }
+  .chartbox canvas { position: absolute; inset: 6px 8px; width: calc(100% - 16px); height: calc(100% - 12px); display: block; }
+  .matrix td { font-size: 13px; }
+  .matrix td.id { font-family: var(--font-data); font-weight: 700; white-space: nowrap; }
+  .matrix .nums { color: var(--ink-2); font-size: 12px; }
+  .matrix .exp { color: var(--ink-3); font-size: 12px; }
+  .matrix tr.grp th { padding-top: 12px; font-family: var(--font-display); font-stretch: 75%; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; font-size: 12px; color: var(--ink-2); border-bottom: 1.5px solid var(--ink); }
+  .mk { font-family: var(--font-mono); font-weight: 700; width: 18px; display: inline-block; }
+  .mk.pass { color: var(--cv); } .mk.fail { color: var(--fault); } .mk.notrun { color: var(--ink-3); }
+  .progress { height: 3px; background: var(--grid); margin: 8px 0 12px; } .progress i { display: block; height: 100%; width: 0; background: var(--ink); transition: width .2s; }
+  ul.assume { margin: 0; padding-left: 18px; color: var(--ink-2); } ul.assume li { margin: 5px 0; } ul.assume b { color: var(--ink); }
+  .keys { margin-top: 6px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  @media (max-width: 760px) {
+    .page { padding: 18px 16px; }
+    .verdict-box, .two { grid-template-columns: minmax(0, 1fr); }
+    .verdict-box > div { border-left: 0; border-top: 1px solid var(--rule); }
+    .table-scroll { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="doc-top">
+    <div>
+      <div class="eyebrow" style="font-size:11px;color:var(--ink-3)">Test raporu · bu sayfa açılırken tarayıcıda yeniden hesaplanır</div>
+      <h1>Doğrulama <span>5F1 Modifiye · Rev A</span></h1>
+    </div>
+    <a class="btn" href="index.html">← Amfi tezgâhı</a>
+  </div>
+
+  <section class="page">
+    <h2>Sonuç</h2>
+    <p class="lead">Testler <b>simülatörün</b> kendi içinde tutarlı ve doğru hesap yaptığını sınar. Amfinin fiziksel doğruluğu ya da güvenliği için kanıt değildir: eldeki tüpler, trafolar ve prototip ölçülmemiştir. Geçen, kalan ve çalıştırılmayan testler ayrı sayılır.</p>
+    <div class="verdict-box" id="verdict"></div>
+    <p class="hint" id="meta" style="margin-top:8px"></p>
+  </section>
+
+  <section class="page">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <h2>Kabul testleri</h2>
+      <div class="actions"><button class="btn" id="rerun">↻ Hızlı testleri yeniden çalıştır</button><button class="btn primary" id="heavy">Ağır testleri de çalıştır (≈ 30 s)</button></div>
+    </div>
+    <p class="lead"><span class="mk pass">✓</span> geçti · <span class="mk fail">✕</span> kaldı · <span class="mk notrun">–</span> çalıştırılmadı. Beklenen değerler analitik ifadeden, bağımsız çözümden ya da veri sayfası noktasından gelir; kodun çıktısından kopyalanmaz. Ağır testler (soğuk açılış, aşırı sürüş, kapanış, adım yakınsaması) çalışırken sayfa yanıt vermez.</p>
+    <div class="progress"><i id="prog"></i></div>
+    <div class="table-scroll"><table class="matrix" id="matrix"></table></div>
+  </section>
+
+  <section class="page">
+    <h2>Soğuk açılış</h2>
+    <p class="lead">t = 0'da şebeke verilir. 5Y3 doğrudan ısıtmalıdır ve ~1 s içinde iletir; 6V6 ve 12AX7 dolaylı ısıtmalıdır ve yük birkaç saniye sonra gelir. Arada filtre kapasitörleri yüksüz tepe gerilimine yaklaşır. Isınma zaman sabitleri temsilîdir (kalibre değil); tepe değeri ise trafo EMK'sine bağlıdır ve deneysel PT verisiyle hesaplanır.</p>
+    <div class="progress"><i id="coldProg"></i></div>
+    <div class="chartbox"><canvas id="chCold"></canvas></div>
+    <div class="keys"><span><i style="color:var(--ink)"></i>B+1</span><span><i style="color:var(--cc)"></i>B+2</span><span><i style="color:var(--a28)"></i>B+3</span><span><i class="dash" style="color:var(--fault)"></i>C4 / C5 nominal 450 V</span><span><i class="dash" style="color:var(--ink-3)"></i>C3 nominal 500 V</span></div>
+    <div class="table-scroll" style="margin-top:12px"><table class="matrix" id="coldTable"></table></div>
+  </section>
+
+  <section class="page">
+    <h2>EQ ve RAW: ham seviye ve ton farkı</h2>
+    <p class="lead">Girişten hoparlör çıkışına küçük sinyal kazancı; V1A'nın gerçek anodik çıkış empedansı, volume potu ve V1B giriş yüküyle. Solda ham seviyeler, sağda iki eğri 1 kHz'de eşitlenmiş: RAW yalnızca "daha yüksek kazanç" değildir, ton ağının yükü kalkınca cevabın biçimi de değişir. TMB topolojisi ve değerleri deneysel profildir (K-05).</p>
+    <div class="two">
+      <div><div class="h4" style="margin-bottom:4px">Ham kazanç (dB)</div><div class="chartbox" style="height:240px"><canvas id="chEq"></canvas></div></div>
+      <div><div class="h4" style="margin-bottom:4px">1 kHz'de normalize (dB)</div><div class="chartbox" style="height:240px"><canvas id="chEqN"></canvas></div></div>
+    </div>
+    <div class="keys"><span><i style="color:var(--ink)"></i>RAW</span><span><i style="color:var(--redline)"></i>EQ, potlar ortada</span><span><i class="dash" style="color:var(--a28)"></i>EQ, bass ve treble tam, mid sıfır</span></div>
+  </section>
+
+  <section class="page">
+    <h2>Modelin sınırları ve varsayımlar</h2>
+    <ul class="assume" id="assume"></ul>
+  </section>
+
+  <section class="page">
+    <h2>Açık kararlar</h2>
+    <p class="lead">Simülasyonun dayandığı ama henüz kapanmamış kararlar. Ayrıntı ve ilgili parçalar tezgâhtaki "Açık kararlar" sekmesindedir.</p>
+    <div class="table-scroll"><table class="matrix" id="decisions"></table></div>
+  </section>
+</div>
+
+<script src="assets/units.js?v=20261001-h"></script>
+<script src="assets/mna.js?v=20261001-h"></script>
+<script src="assets/tubes.js?v=20261001-h"></script>
+<script src="assets/circuit-5f1.js?v=20261001-h"></script>
+<script src="assets/dsp.js?v=20261001-h"></script>
+<script src="assets/amp-model.js?v=20261001-h"></script>
+<script src="assets/bom-amp.js?v=20261001-h"></script>
+<script src="assets/schematic-amp.js?v=20261001-h"></script>
+<script src="assets/charts.js?v=20261001-h"></script>
+<script src="assets/tests-amp.js?v=20261001-h"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = id => document.getElementById(id), T = AmpTests, D = Design, num = Units.num;
+  const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const MARK = { pass: '✓', fail: '✕', notrun: '–' };
+  const results = new Map();
+  let ctx = T.makeCtx(), busy = false;
+
+  function renderMatrix() {
+    let html = '<tr><th></th><th>Kimlik</th><th>Test</th><th>Ölçülen · beklenen · not</th><th>Gereksinim</th></tr>', g = null;
+    for (const t of T.TESTS) {
+      if (t.group !== g) { g = t.group; html += `<tr class="grp"><th colspan="5">${g}</th></tr>`; }
+      const r = results.get(t.id);
+      const st = r ? r.status : 'notrun';
+      html += `<tr><td><span class="mk ${st}">${MARK[st]}</span></td><td class="id">${t.id}</td><td>${esc(t.title)}${t.heavy ? ' <span class="chip notrun">ağır</span>' : ''}</td>` +
+        `<td>${r ? `<div class="nums">${esc(r.measured)}</div><div class="exp">Beklenen: ${esc(r.expected)}</div>${r.note ? `<div class="exp">${esc(r.note)}</div>` : ''}` : `<span class="exp">${t.heavy ? 'Çalıştırılmadı (ağır test; yukarıdaki düğmeyle çalıştırın).' : 'Sırada…'}</span>`}</td><td class="exp">${esc(t.req)}</td></tr>`;
+    }
+    $('matrix').innerHTML = html;
+    const all = T.TESTS.map(t => (results.get(t.id) || { status: 'notrun' }).status), n = s => all.filter(x => x === s).length;
+    $('verdict').innerHTML =
+      `<div><div class="big ok">${n('pass')}</div><p>geçti</p></div>` +
+      `<div><div class="big ${n('fail') ? 'bad' : 'dim'}">${n('fail')}</div><p>kaldı</p></div>` +
+      `<div><div class="big dim">${n('notrun')}</div><p>çalıştırılmadı (ağır testler, ngspice karşılaştırması, elle tarayıcı testi)</p></div>` +
+      `<div><div class="big" style="font-size:18px;padding-top:8px">${D.PROFILE_DEFAULT.id}</div><p>etkin profil · deneysel, onaylanmadı · devre kimliği ${D.designHash(D.cloneProfile())}</p></div>`;
+  }
+  function runTests(includeHeavy) {
+    if (busy) return; busy = true;
+    const list = T.TESTS.filter(t => includeHeavy || !t.heavy);
+    let i = 0;
+    const next = () => {
+      if (i >= list.length) { busy = false; $('prog').style.width = '100%'; return; }
+      const t = list[i++];
+      results.set(t.id, T.runOne(t, ctx));
+      $('prog').style.width = (100 * i / list.length) + '%';
+      renderMatrix();
+      setTimeout(next, 30);
+    };
+    renderMatrix(); setTimeout(next, 60);
+  }
+  $('rerun').addEventListener('click', () => { ctx = T.makeCtx(); results.clear(); $('prog').style.width = '0'; runTests(false); });
+  $('heavy').addEventListener('click', () => { runTests(true); });
+
+  // --- Soğuk açılış (dilimler hâlinde; sayfa kilitlenmez) ---
+  function coldStart() {
+    const P = D.cloneProfile(), st = Amp.defaultState(), sim = new Amp.Sim(P, st), total = 28;
+    const ch = new LineChart($('chCold'), { xLabel: 's', minSpan: total, xDigits: 2, tipW: 130, left: { min: 0, max: 550, label: 'V', step: 100 },
+      series: [{ key: 'B1', color: cssv('--ink'), label: 'B+1', digits: 1 }, { key: 'B2', color: cssv('--cc'), label: 'B+2', digits: 1, width: 1.6 }, { key: 'B3', color: cssv('--a28'), label: 'B+3', digits: 1, width: 1.6 }],
+      refLines: [{ axis: 'left', value: 450, color: cssv('--fault'), label: '450 V', right: true }, { axis: 'left', value: 500, color: cssv('--ink-3'), label: '500 V', right: true }] });
+    const tick = () => {
+      const t0 = performance.now();
+      while (performance.now() - t0 < 25 && sim.t < total && !sim.error) sim.step(400);
+      $('coldProg').style.width = (100 * sim.t / total) + '%';
+      ch.draw(sim.history, { xMin: 0, xMax: total });
+      if (sim.t < total && !sim.error) return setTimeout(tick, 0);
+      const pk = sim.peaks.cap, w = sim.win, row = (id) => { const c = D.BY_ID[id], v = pk[id], r = c.rating.V, lv = v > r ? 'fail' : v > 0.9 * r ? 'notrun' : 'pass'; return `<tr><td><span class="mk ${lv}">${v > r ? '✕' : v > 0.9 * r ? '!' : '✓'}</span></td><td class="id">${id}</td><td>${esc(c.fn)}</td><td class="nums">tepe ${num(v, 0)} V / nominal ${r} V (%${num(100 * v / r, 0)})</td></tr>`; };
+      $('coldTable').innerHTML = sim.error ? `<tr><td>Çözücü hatası: ${esc(sim.error.msg)}. Sonuç yok.</td></tr>` :
+        '<tr><th></th><th>Parça</th><th>Görev</th><th>Tasarım bulgusu (model tahmini)</th></tr>' + ['C3', 'C4', 'C5'].map(row).join('') +
+        `<tr><td></td><td class="id">V3</td><td>5Y3 plaka akımı</td><td class="nums">tepe ${num(sim.peaks.iRectPk * 1000, 0)} mA / plaka · sınır: veri eksik</td></tr>` +
+        `<tr><td></td><td class="id">—</td><td>28 s sonunda</td><td class="nums">B+1 ${num(w.B1, 1)} V · B+2 ${num(w.B2, 1)} V · B+3 ${num(w.B3, 1)} V · 6V6 Ia ${num(w.ia * 1000, 1)} mA · Pa ${num(w.pa, 1)} W</td></tr>` +
+        `<tr><td colspan="4" class="exp">İdeal yüksüz tepe örnekleri (inceleme raporu §6.2): ${Amp.idealPeaks(P).map(p => `${p.name} → ${num(p.v, 1)} V`).join(' · ')}. Bunlar B+ tahmini değil, marjı sorgulayan sınır örnekleridir.</td></tr>`;
+    };
+    tick();
+  }
+
+  // --- EQ / RAW ---
+  function eqCharts() {
+    const P = D.cloneProfile(), fr = Amp.logspace(20, 20000, 121), s0 = Amp.defaultState();
+    const base = Amp.steady(P, s0), op = Amp.dcOp(P, s0, base.win.B1);
+    const curve = mod => { const st = Amp.defaultState(); mod(st); const o = Amp.dcOp(P, st, base.win.B1); return Amp.acSweep(P, st, fr, o).H('S4').mag.map(v => 20 * Math.log10(v)); };
+    const raw = curve(() => {}), eq = curve(s => { s.sw.S2 = 'EQ'; }), eq2 = curve(s => { s.sw.S2 = 'EQ'; s.pots.VR3 = 1; s.pots.VR2 = 1; s.pots.VR4 = 0; });
+    const k = fr.reduce((b, f, i) => (Math.abs(f - 1000) < Math.abs(fr[b] - 1000) ? i : b), 0);
+    const mk = (norm) => fr.map((f, i) => ({ f, raw: raw[i] - (norm ? raw[k] : 0), eq: eq[i] - (norm ? eq[k] : 0), eq2: eq2[i] - (norm ? eq2[k] : 0) }));
+    const series = [{ key: 'raw', color: cssv('--ink'), label: 'RAW', digits: 1 }, { key: 'eq', color: cssv('--redline'), label: 'EQ orta', digits: 1 }, { key: 'eq2', color: cssv('--a28'), label: 'EQ B/T tam', digits: 1, dash: [5, 4], width: 1.5 }];
+    new LineChart($('chEq'), { xLabel: 'Hz', xLog: true, xDigits: 0, left: { min: 0, max: 50, label: 'dB', step: 10 }, series }).draw(mk(false), { xKey: 'f', xMin: 20, xMax: 20000 });
+    new LineChart($('chEqN'), { xLabel: 'Hz', xLog: true, xDigits: 0, left: { min: -25, max: 15, label: 'dB', step: 5 }, series }).draw(mk(true), { xKey: 'f', xMin: 20, xMax: 20000 });
+  }
+
+  $('assume').innerHTML = [
+    '<b>Deneysel profil.</b> TMB topolojisi ve değerleri, RAW anahtarlaması, Bright / Dark kapasitörleri, V1A bypass durumu ve V1B / NFB düğümü açık kararlardır; simülasyon bunlar için ilk deney değerlerini kullanır. Sonuçlar "referans 5F1 sonucu" değildir.',
+    '<b>Tüp modelleri geneldir.</b> Eldeki 12AX7, 6V6GT ve 5Y3GT\'nin üreticisi bilinmiyor. 12AX7 ve 6V6 plaka akımı Koren denklemleriyle, 5Y3 Child yasasıyla modellenir; 6V6 ve 5Y3 kartları JJ veri sayfasının birer tipik noktasına karşı sınanmıştır (MK-01, MK-02). Sınır değerleri "veri eksik"tir.',
+    '<b>6V6 ekran akımı.</b> Plakanın almadığı uzay akımı ekrana verilir (bu projeye özgü, eğrilerle doğrulanmamış bir yaklaşım). Kırpılmadaki çıkış gücü ve ekran gücü yaklaşık değerlerdir.',
+    '<b>Trafolar.</b> PT: 320 VAC yüksüz EMK ve plaka başına 200 Ω kaynak direnci varsayımı. OT: 300 Ω primer DCR, 15 H, 30 mH kaçak. Nüve doyumu, sargı kapasitesi ve inrush modellenmez. Üretici verisi geldiğinde profil güncellenmelidir.',
+    '<b>Isınma.</b> Emisyon eğrileri temsilîdir (5Y3 τ ≈ 0,8 s; diğerleri τ ≈ 6 s). Açılış tepesinin süresi buna bağlıdır; yüksekliği trafo EMK\'sine.',
+    '<b>Hoparlör.</b> Yük omik dirençtir. Empedans eğrisi, T/S, SPL ve kabin tonu için sayı üretilmez.',
+    '<b>AC analizi.</b> DC çalışma noktasında doğrusallaştırma; doğrultucu açık devre kabul edilir, besleme empedansını C3 / C4 / C5 belirler. Distorsiyon ve aşırı sürüş AC analizinden çıkarılmaz; zaman alanı çözümünden gelir.',
+    '<b>Sayısal.</b> Canlı besleme 100 µs sabit adım, ses analizi 96 kHz; BDF2. Newton yakınsamazsa adım bölünür, sonra açık hata verilir. Hiçbir değer kırpılmaz. GMIN 1 pS ve pot uç direnci 1 Ω sayısal eklemelerdir.',
+    '<b>Kapsam dışı.</b> Ark, izolasyon delinmesi, mikrofoni, heater ve trafo kaynaklı hum, parça sıcaklığı, canlı ses dinleme, 3B görünüm. ngspice ile bağımsız karşılaştırma ve gerçek tarayıcılarda elle kullanım testi bu sayfada çalıştırılmaz.',
+    '<b>Güvenlik.</b> Bu simülasyon canlı devrede çalışma talimatı ya da güvenlik onayı değildir. Simülatördeki yeşil göstergeler yüksek gerilim ve depolanan enerji tehlikesini ortadan kaldırmaz; gerçek devrede yük algılama ya da otomatik kesme yoktur.',
+  ].map(x => `<li>${x}</li>`).join('');
+
+  $('decisions').innerHTML = '<tr><th>Kimlik</th><th>Öncelik</th><th>Konu</th><th>Durum</th><th>Simülasyon varsayımı</th></tr>' +
+    D.DECISIONS.map(d => `<tr><td class="id">${d.id}</td><td><span class="chip ${d.pri}">${d.pri}</span></td><td>${esc(d.title)}</td><td class="exp">${d.state}</td><td class="nums">${esc(d.sim)}</td></tr>`).join('');
+  $('meta').textContent = `Devre ${D.REVISION.id} · profil ${D.PROFILE_DEFAULT.id} · ${T.TESTS.length} test tanımı · hesap tarihi ${new Date().toLocaleString('tr-TR')}`;
+
+  renderMatrix();
+  setTimeout(() => { eqCharts(); runTests(false); setTimeout(coldStart, 400); }, 50);
+})();
+</script>
+</body>
+</html>

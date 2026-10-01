@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amfi Tezgâhı — 5F1 Modifiye</title>
+<link rel="stylesheet" href="assets/amp.css?v=20261001-h">
+</head>
+<body>
+<div class="app chargeApp" id="app">
+
+  <header class="top">
+    <div class="title">
+      <div class="eyebrow">5F1 tabanlı modifiye tüplü gitar amfisi · Revizyon A · simülasyon</div>
+      <h1>Amfi tezgâhı <span>12AX7 · 6V6GT · 5Y3GT</span></h1>
+    </div>
+
+    <div class="req" role="group" aria-label="Şebeke anahtarı">
+      <button data-power="on" aria-pressed="true" title="S5 kapalı kontak: şebeke bağlı (P)">Güç açık</button>
+      <button data-power="off" aria-pressed="false" title="S5 açık kontak: şebeke kesik (P)">Güç kapalı</button>
+    </div>
+
+    <div class="transport">
+      <button class="btn primary" id="play"><span id="playIcon">❚❚</span> <span id="playText">Duraklat</span> <span class="k">boşluk</span></button>
+      <button class="btn" id="toSteady" title="Zaman geçmişini silmeden kararlı duruma kadar hızlı ilerler (E)">⏭ Kararlı duruma git</button>
+      <button class="btn" id="cold" title="Yeni deney: t = 0, tüpler soğuk, kapasitörler boş. Zaman geçmişi silinir (R)">↺ Soğuk açılış</button>
+      <select class="speed" id="speed" aria-label="Oynatma hızı" title="Hız yalnızca oynatmayı değiştirir; elektrik sonucunu değiştirmez">
+        <option value="0.25">0,25×</option><option value="1" selected>1×</option><option value="4">4×</option><option value="16">16×</option>
+      </select>
+      <a class="btn" href="dogrulama.html">Doğrulama →</a>
+    </div>
+  </header>
+
+  <section class="display" aria-label="Anlık değerler">
+    <div class="rd"><span class="tag">B+1 · güç katı</span><div class="num" id="rB1">—</div><div class="sub" id="rB1s">—</div></div>
+    <div class="rd"><span class="tag">6V6 anodik akım</span><div class="num" id="rIa">—</div><div class="sub" id="rIas">—</div></div>
+    <div class="leds" aria-label="Çalışma durumu">
+      <div class="led pwr" id="ledPwr"><i></i>GÜÇ</div>
+      <div class="led warm" id="ledWarm"><i></i>ISINMA</div>
+      <div class="led rdy" id="ledRdy"><i></i>HAZIR</div>
+    </div>
+    <div class="rd mid"><span class="tag">6V6 anodik güç</span><div class="num" id="rPa">—</div><div class="sub" id="rPas">—</div></div>
+    <div class="rd mid"><span class="tag">Çıkış gücü</span><div class="num" id="rPo">—</div><div class="sub" id="rPos">—</div></div>
+    <div class="rd mid"><span class="tag">Süre</span><div class="num" id="rt">—</div><div class="sub" id="rts">—</div></div>
+    <div class="rd state" id="rStateBox"><span class="tag">Durum</span><div class="num" id="rState">—</div><div class="sub" id="rStates">—</div></div>
+  </section>
+
+  <main class="main">
+    <section class="schematic-panel" aria-label="Kontroller ve devre şeması">
+      <div class="amp-panel" id="ampPanel"></div>
+      <div class="sheet" id="sheet" aria-label="Devre şeması"></div>
+    </section>
+
+    <section class="plots">
+      <div class="plot">
+        <div class="plot-head">
+          <span class="eyebrow">Besleme — zaman (s)</span>
+          <span class="mrow" id="supplyNote"></span>
+        </div>
+        <div class="plotbox"><canvas id="chSupply" aria-label="B+ gerilimleri grafiği"></canvas></div>
+        <div class="keys">
+          <span><i style="color:var(--ink)"></i>B+1</span><span><i style="color:var(--cc)"></i>B+2</span><span><i style="color:var(--a28)"></i>B+3</span>
+          <span><i class="dash" style="color:var(--fault)"></i>C4 / C5 nominal 450 V</span><span><i class="dash" style="color:var(--ink-3)"></i>C3 nominal 500 V</span>
+        </div>
+      </div>
+      <div class="plot tall">
+        <div class="plot-head">
+          <div class="seg" role="group" aria-label="Analiz grafiği">
+            <button data-view="scope" aria-pressed="true">Osiloskop</button>
+            <button data-view="spec" aria-pressed="false">Spektrum</button>
+            <button data-view="freq" aria-pressed="false">Frekans cevabı</button>
+            <button data-view="nfb" aria-pressed="false">NFB çevrimi</button>
+          </div>
+        </div>
+        <div class="scope-opts" id="viewOpts"></div>
+        <div class="plotbox"><canvas id="chView" aria-label="Analiz grafiği"></canvas></div>
+        <div class="mrow" id="viewMeas"></div>
+        <div class="astat" id="astat" role="status"><span class="dotst"></span><span id="astatText">—</span></div>
+      </div>
+    </section>
+  </main>
+
+  <section class="drawer">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="scen" aria-selected="true">Senaryolar</button>
+      <button class="tab" role="tab" data-tab="part" aria-selected="false">Bileşen</button>
+      <button class="tab" role="tab" data-tab="op" aria-selected="false">Çalışma noktası</button>
+      <button class="tab" role="tab" data-tab="checks" aria-selected="false">Tasarım kontrolleri<span class="cnt" id="checkCnt" hidden></span></button>
+      <button class="tab" role="tab" data-tab="dec" aria-selected="false">Açık kararlar</button>
+      <button class="tab" role="tab" data-tab="prof" aria-selected="false">Profil</button>
+      <button class="tab" role="tab" data-tab="log" aria-selected="false">Olay günlüğü</button>
+      <button class="tab" role="tab" data-tab="bom" aria-selected="false">Malzeme / tedarik</button>
+      <button class="tab" role="tab" data-tab="cards" aria-selected="false">Model kartları</button>
+    </div>
+    <div class="panel" data-panel="scen"><div class="scen" id="scenList"></div></div>
+    <div class="panel" data-panel="part" hidden><div id="inspector"></div></div>
+    <div class="panel" data-panel="op" hidden><div id="opTable"></div></div>
+    <div class="panel" data-panel="checks" hidden><div id="checksBox"></div></div>
+    <div class="panel" data-panel="dec" hidden><div id="decList"></div></div>
+    <div class="panel" data-panel="prof" hidden><div id="profBox"></div></div>
+    <div class="panel" data-panel="log" hidden><div class="exports" id="exports"></div><div class="log" id="log"></div></div>
+    <div class="panel" data-panel="bom" hidden><div id="bom"></div></div>
+    <div class="panel" data-panel="cards" hidden><div id="cards"></div></div>
+  </section>
+</div>
+
+<script src="assets/units.js?v=20261001-h"></script>
+<script src="assets/mna.js?v=20261001-h"></script>
+<script src="assets/tubes.js?v=20261001-h"></script>
+<script src="assets/circuit-5f1.js?v=20261001-h"></script>
+<script src="assets/dsp.js?v=20261001-h"></script>
+<script src="assets/amp-model.js?v=20261001-h"></script>
+<script src="assets/bom-amp.js?v=20261001-h"></script>
+<script src="assets/schematic-amp.js?v=20261001-h"></script>
+<script src="assets/charts.js?v=20261001-h"></script>
+<script src="assets/scenarios-amp.js?v=20261001-h"></script>
+<script src="assets/ui-core.js?v=20261001-h"></script>
+<script src="assets/ui-analysis.js?v=20261001-h"></script>
+<script src="assets/ui-panels.js?v=20261001-h"></script>
+<script>Bench.start();</script>
+</body>
+</html>

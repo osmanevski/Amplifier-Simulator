@@ -1,0 +1,64 @@
+* 5F1 Modifiye Rev A · profil DENEYSEL-01 · RAW / NORMAL · 4bdeedb1
+* Kanonik tanımdan üretildi; düğüm adları anahtar konumlarına göre birleştirilmiştir.
+R_T1.ra T1SA HA 200
+R_T1.rb T1SB HB 200
+R_R10 B1 B2 10000
+R_R11 B2 B3 22000
+R_R1 IN G1 68000
+R_R2 IN G1 68000
+R_R3 IN 0 1000000
+R_R4 B3 PA 100000
+R_R5 KA 0 1500
+R_R13 TSI SJ 56000
+R_VR2.alt TB TW 125000
+R_VR2.ust TW TT 125000
+R_VR3.alt TB MT 100000
+R_VR4.alt 0 MT 12500
+R_VR1.alt 0 G2 500000
+R_VR1.ust G2 CO1 500000
+R_R6 B3 PB 100000
+R_R7 KB 0 1500
+R_R12 S4 KB 22000
+R_R8 G6 0 220000
+R_R9 K6 0 470
+R_T2.rp B1 T2P1 300
+R_T2.rs4 T2X4 S4 0.3
+R_T2.rs8 T2X8 S8 0.15
+R_T2.rs16 T2X16 S16 0.25
+R_J2.yuk S4 0 4
+R_SRC.r SRC IN 0.001
+C_C3 B1 0 0.000016
+C_C4 B2 0 0.00001
+C_C5 B3 0 0.00001
+C_V1A.cgp G1 PA 1.7e-12
+C_V1A.cgk G1 KA 1.6e-12
+C_V1A.cpk PA KA 4.6e-13
+C_C1 PA CO1 2.2e-8
+C_C8 TSI TT 2.5e-10
+C_C9 SJ TB 2.2e-8
+C_C10 SJ MT 2.2e-8
+C_C11 S3X G2 1e-10
+C_C12 S4X 0 1e-9
+C_V1B.cgp G2 PB 1.7e-12
+C_V1B.cgk G2 KB 1.6e-12
+C_V1B.cpk PB KB 4.6e-13
+C_C2 PB G6 2.2e-8
+C_V2.cg1 G6 K6 9e-12
+C_V2.ca A6 K6 8.5e-12
+C_V2.cag1 A6 G6 7e-13
+C_C6 K6 0 0.000022
+L_T2.ll T2P1 T2P2 0.03
+V_T1.a T1SA 0 ; kaynak
+V_T1.b T1SB 0 ; kaynak
+V_VIN SRC 0 ; kaynak
+* Trafo T2: Lm = 15 H (n = 1 sargısına göre)
+*   sargı T2.p: T2P2 → A6  n = 1
+*   sargı T2.s4: 0 → T2X4  n = 0.022360679774997897
+*   sargı T2.s8: S4 → T2X8  n = 0.009262096826685894
+*   sargı T2.s16: S8 → T2X16  n = 0.013098582948312003
+X_V3.a HA B1 5Y3-child ; Plaka başına Child yasası: I = G · V^1,5 (V > 0)
+X_V3.b HB B1 5Y3-child ; Plaka başına Child yasası: I = G · V^1,5 (V > 0)
+X_V1A PA G1 KA 12AX7-koren ; Koren geliştirilmiş triyot: E1 = (Vp/kP)·ln(1 + exp(kP·(1/µ + Vg/√(kVB + Vp²)))); Ip = 2·E1^X / kG1
+X_V1B PB G2 KB 12AX7-koren ; Koren geliştirilmiş triyot: E1 = (Vp/kP)·ln(1 + exp(kP·(1/µ + Vg/√(kVB + Vp²)))); Ip = 2·E1^X / kG1
+X_V2 A6 B2 G6 K6 6V6-koren ; Koren pentot plaka akımı: E1 = (Vg2/kP)·ln(1 + exp(kP·(1/µ + Vg1/Vg2))); Ip = 2·E1^X/kG1 · atan(Vp/kVB). Ekran: akım korunumlu; Ig2 = (Vg1 + Vg2/µ)^X/kG2 + Ip∞·(1 − (2/π)·atan(Vp/kVB)), Ip∞ = π·E1^X/kG1
+.end

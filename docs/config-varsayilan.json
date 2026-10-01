@@ -1,0 +1,115 @@
+{
+  "kind": "5f1-amp-lab-config",
+  "schema": 1,
+  "revision": "Rev A",
+  "designHash": "4bdeedb1",
+  "solver": {
+    "liveStepS": 0.0001,
+    "method": "bdf2",
+    "audio": {
+      "fs": 96000,
+      "n": 16384,
+      "settleS": 0.12,
+      "window": "hann",
+      "nHarm": 10,
+      "method": "bdf2"
+    }
+  },
+  "state": {
+    "mainsOn": true,
+    "mainsV": 230,
+    "sw": {
+      "S1": "HIGH",
+      "S2": "RAW",
+      "S3": "OFF",
+      "S4": "OFF"
+    },
+    "pots": {
+      "VR1": 0.5,
+      "VR2": 0.5,
+      "VR3": 0.5,
+      "VR4": 0.5
+    },
+    "loads": {
+      "J2": 4,
+      "J3": null,
+      "J4": null
+    },
+    "otPhase": 1,
+    "nfb": true,
+    "src": {
+      "kind": "ideal",
+      "amp": 0.05,
+      "freq": 1000
+    }
+  },
+  "profile": {
+    "id": "DENEYSEL-01",
+    "schema": 1,
+    "base": "Rev A",
+    "approved": false,
+    "name": "RAW / NORMAL başlangıç profili",
+    "why": "Açık kararlar kapanana kadar simülasyonun çalışabilmesi için seçilen ilk deney değerleri.",
+    "values": {
+      "C8": 2.5e-10,
+      "R13": 56000,
+      "C9": 2.2e-8,
+      "C10": 2.2e-8,
+      "VR2": 250000,
+      "VR3": 1000000,
+      "VR4": 25000,
+      "C11": 1e-10,
+      "C12": 1e-9,
+      "R16": 220000,
+      "C7": 0.000025
+    },
+    "fitted": {
+      "C7": false,
+      "R16": false
+    },
+    "tapers": {
+      "VR1": "lin",
+      "VR2": "lin",
+      "VR3": "log",
+      "VR4": "lin"
+    },
+    "rawMethod": "lift",
+    "T1": {
+      "vSec": 320,
+      "rt": 200,
+      "noLoadRisePct": 0,
+      "mainsNom": 230,
+      "freq": 50
+    },
+    "T2": {
+      "zp": 8000,
+      "rp": 300,
+      "lp": 15,
+      "lleak": 0.03,
+      "rs": [
+        0.3,
+        0.15,
+        0.25
+      ]
+    },
+    "models": {
+      "V1A": "12AX7-koren",
+      "V1B": "12AX7-koren",
+      "V2": "6V6-koren",
+      "V3": "5Y3-child"
+    },
+    "reasons": {
+      "C8": "P1 aday aralığının alt ucu (250–500 pF).",
+      "R13": "P1 aday aralığının alt ucu (56–100 kΩ).",
+      "C9": "P1 aday sınıfı (20–22 nF); kuplaj kapasitörüyle aynı değer.",
+      "C10": "P1 aday sınıfı (20–22 nF).",
+      "VR2": "P1 başlangıç referansı.",
+      "VR3": "P1 başlangıç referansı; taper tanımsız, log seçildi.",
+      "VR4": "P1 başlangıç referansı.",
+      "C11": "P1 aday aralığının alt ucu (100–220 pF).",
+      "C12": "P1 deneme değerlerinin ortası (470 pF / 1 nF / 2,2 nF).",
+      "T1": "Üretici verisi yok. Rt = 200 Ω küçük bir 320-0-320 V sargı için temsili etkin kaynak direncidir.",
+      "T2": "Üretici verisi yok. P1: \"primer DCR birkaç yüz ohm mertebesinde olabilir\"."
+    }
+  }
+}
